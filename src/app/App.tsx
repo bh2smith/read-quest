@@ -6,10 +6,12 @@ import { BadgeCard } from "../components/BadgeCard";
 import { ExerciseScreen } from "../features/learning/ExerciseScreen";
 import { LessonCompleteScreen } from "../features/learning/LessonCompleteScreen";
 import { useProgress } from "../features/learning/useLessonProgress";
+import { ParentScreen } from "../features/parent/ParentScreen";
 import { track } from "../lib/analytics";
 
 type View =
   | { name: "home" }
+  | { name: "parent" }
   | { name: "exercise"; lessonId: string }
   | {
       name: "complete";
@@ -27,6 +29,14 @@ export default function App() {
   useEffect(() => {
     track("app_opened");
   }, []);
+
+  if (view.name === "parent") {
+    return (
+      <Shell>
+        <ParentScreen onBack={() => setView({ name: "home" })} />
+      </Shell>
+    );
+  }
 
   if (view.name === "exercise") {
     const lesson = lessonsById[view.lessonId];
@@ -103,7 +113,15 @@ export default function App() {
           </div>
         </section>
 
-        <footer className="pt-2 text-center">
+        <footer className="flex items-center justify-center gap-4 pt-2 text-center">
+          <button
+            type="button"
+            onClick={() => setView({ name: "parent" })}
+            className="text-sm font-semibold text-indigo-500 hover:text-indigo-700"
+          >
+            For grown-ups →
+          </button>
+          <span className="text-slate-300">·</span>
           <button
             type="button"
             onClick={() => {

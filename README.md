@@ -6,16 +6,25 @@ sentence, earn XP, and unlock achievement badges. Built as a Circles mini-app
 
 ## Status
 
-Day 1–2 of the plan is implemented: the full learning loop runs locally.
+Days 1–3 of the plan are implemented.
 
+**Learning loop (Days 1–2)**
 - 5 lessons × 6 exercises (30 prebuilt, static JSON-style data)
 - Multiple-choice answers with instant feedback
 - XP (+10/correct, +50/lesson, +25 perfect bonus) and badge unlocks
 - Progress persisted to `localStorage` (with a reset button)
+
+**Circles connection (Day 3)**
+- Parent/teacher/sponsor "For grown-ups" mode
+- Wallet connect via `@aboutcircles/miniapp-sdk` (`requestCreateAccount`,
+  `onWalletChange` as the source of truth). Outside the Circles host it falls
+  back to a clearly-labeled **demo wallet** so the flow is viewable locally.
+- Invite/referral links (`?ref=<address>`), copy-to-clipboard, and inbound
+  referral attribution (URL or host `?data=` channel)
 - Analytics events stubbed in `src/lib/analytics.ts` (currently `console.debug`)
 
-Not yet wired (later milestones): Circles wallet connect, CRC rewards,
-on-chain ERC-1155 badge minting, referrals.
+Not yet wired (later milestones): CRC reward claim and on-chain ERC-1155
+badge minting (Day 4).
 
 ## Run
 
@@ -37,6 +46,9 @@ src/
   components/                       AnswerChoice, BadgeCard, LessonCard, ProgressBar
   data/                             exercises, lessons, badges (static)
   features/learning/                ExerciseScreen, LessonCompleteScreen, useLessonProgress
+  features/circles/                 wallet store (miniapp-sdk: connect + onWalletChange)
+  features/referrals/               invite link build/copy + referral attribution
+  features/parent/                  ParentScreen (grown-up mode: wallet, progress, invites)
   lib/                              types, storage (localStorage), analytics
   styles/globals.css                Tailwind entry + animations
 ```
