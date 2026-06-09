@@ -6,6 +6,7 @@ import { WalletConnectButton } from "../../components/WalletConnectButton";
 import { useProgress } from "../learning/useLessonProgress";
 import { useWallet } from "../circles/wallet";
 import { buildInviteLink, copyInviteLink } from "../referrals/referral";
+import { RewardClaim } from "../rewards/RewardClaim";
 
 type Props = {
   onBack: () => void;
@@ -68,6 +69,11 @@ export function ParentScreen({ onBack }: Props) {
             label="Badges"
           />
         </div>
+      </section>
+
+      <section className="rounded-3xl bg-white p-5 shadow-sm">
+        <h2 className="mb-3 text-lg font-bold text-slate-700">Rewards</h2>
+        <RewardClaim />
       </section>
 
       <section className="rounded-3xl bg-white p-5 shadow-sm">

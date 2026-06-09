@@ -6,7 +6,7 @@ sentence, earn XP, and unlock achievement badges. Built as a Circles mini-app
 
 ## Status
 
-Days 1–3 of the plan are implemented.
+Days 1–4 of the plan are implemented.
 
 **Learning loop (Days 1–2)**
 - 5 lessons × 6 exercises (30 prebuilt, static JSON-style data)
@@ -23,8 +23,16 @@ Days 1–3 of the plan are implemented.
   referral attribution (URL or host `?data=` channel)
 - Analytics events stubbed in `src/lib/analytics.ts` (currently `console.debug`)
 
-Not yet wired (later milestones): CRC reward claim and on-chain ERC-1155
-badge minting (Day 4).
+**Rewards (Day 4)**
+- Badge mint + CRC reward claim per completed lesson, from the grown-up wallet
+- Claim limits: one badge mint and one CRC claim per lesson, per wallet
+- Cooldown between CRC claims (anti-farming); persisted per wallet
+- Mock transaction paths today, with documented seams for a real ERC-1155
+  mint and Circles CRC transfer via the SDK's `sendTransactions`
+  (see `features/rewards/badgeMint.ts` and `crcReward.ts`)
+
+Not yet wired (later milestones): polish, real on-chain contract + CRC path,
+deploy & submit (Days 5–6).
 
 ## Run
 
@@ -48,6 +56,7 @@ src/
   features/learning/                ExerciseScreen, LessonCompleteScreen, useLessonProgress
   features/circles/                 wallet store (miniapp-sdk: connect + onWalletChange)
   features/referrals/               invite link build/copy + referral attribution
+  features/rewards/                 badge mint + CRC claim (mock), limits, RewardClaim UI
   features/parent/                  ParentScreen (grown-up mode: wallet, progress, invites)
   lib/                              types, storage (localStorage), analytics
   styles/globals.css                Tailwind entry + animations
