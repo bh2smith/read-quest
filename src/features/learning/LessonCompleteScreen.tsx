@@ -1,4 +1,5 @@
 import type { Badge, Lesson } from "../../lib/types";
+import { Confetti } from "../../components/Confetti";
 
 type Props = {
   lesson: Lesson;
@@ -21,6 +22,7 @@ export function LessonCompleteScreen({
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col items-center justify-center gap-6 p-6 text-center">
+      <Confetti />
       <div className="animate-pop-in flex h-32 w-32 items-center justify-center rounded-full bg-amber-100 text-7xl shadow-inner">
         {badge?.emoji ?? "🏅"}
       </div>

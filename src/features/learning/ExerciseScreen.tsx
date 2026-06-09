@@ -49,7 +49,7 @@ export function ExerciseScreen({ lesson, onComplete, onExit }: Props) {
   }
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col gap-5 p-5">
+    <div className="mx-auto flex min-h-dvh w-full max-w-md select-none flex-col gap-5 p-5">
       <div className="flex items-center gap-3">
         <button
           type="button"
@@ -64,7 +64,10 @@ export function ExerciseScreen({ lesson, onComplete, onExit }: Props) {
         </div>
       </div>
 
-      <div className="flex flex-col items-center rounded-3xl bg-white p-8 shadow-sm">
+      <div
+        key={index}
+        className="animate-fade-in relative flex flex-col items-center rounded-3xl bg-white p-8 shadow-sm"
+      >
         <div
           className="text-7xl"
           role="img"
@@ -73,6 +76,11 @@ export function ExerciseScreen({ lesson, onComplete, onExit }: Props) {
         >
           {exercise.emoji}
         </div>
+        {isCorrect && (
+          <span className="animate-float-up pointer-events-none absolute right-6 top-6 text-xl font-extrabold text-emerald-500">
+            +10 XP
+          </span>
+        )}
       </div>
 
       <p className="text-center text-2xl font-bold leading-snug text-slate-800">

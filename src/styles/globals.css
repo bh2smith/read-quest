@@ -5,12 +5,50 @@
   -webkit-font-smoothing: antialiased;
 }
 
+/* Avoid the iOS blue tap highlight on game buttons. */
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
 @keyframes pop-in {
   0% { transform: scale(0.6); opacity: 0; }
   60% { transform: scale(1.08); opacity: 1; }
   100% { transform: scale(1); }
 }
 
-.animate-pop-in {
-  animation: pop-in 0.4s ease-out both;
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+@keyframes float-up {
+  0% { opacity: 0; transform: translateY(6px) scale(0.8); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-28px) scale(1); }
+}
+
+@keyframes confetti-fall {
+  0% { opacity: 1; transform: translateY(-10vh) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(80vh) rotate(540deg); }
+}
+
+.animate-pop-in { animation: pop-in 0.4s ease-out both; }
+.animate-fade-in { animation: fade-in 0.3s ease-out both; }
+.animate-shake { animation: shake 0.4s ease-in-out both; }
+.animate-float-up { animation: float-up 1s ease-out forwards; }
+
+/* Respect users who prefer reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-pop-in,
+  .animate-fade-in,
+  .animate-shake,
+  .animate-float-up {
+    animation: none;
+  }
 }

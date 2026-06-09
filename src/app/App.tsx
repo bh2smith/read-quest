@@ -72,14 +72,16 @@ export default function App() {
 
   return (
     <Shell>
-      <div className="mx-auto flex w-full max-w-md flex-col gap-6 p-5">
+      <div className="animate-fade-in mx-auto flex w-full max-w-md flex-col gap-6 p-5">
         <header className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-extrabold text-indigo-700">ReadQuest</h1>
             <p className="text-sm text-slate-500">Read, play, earn badges.</p>
           </div>
           <div className="rounded-2xl bg-amber-100 px-4 py-2 text-center">
-            <p className="text-xl font-extrabold text-amber-600">{progress.xp}</p>
+            <p key={progress.xp} className="animate-pop-in text-xl font-extrabold text-amber-600">
+              {progress.xp}
+            </p>
             <p className="text-xs text-amber-700">XP</p>
           </div>
         </header>
@@ -138,5 +140,9 @@ export default function App() {
 }
 
 function Shell({ children }: { children: React.ReactNode }) {
-  return <div className="min-h-dvh bg-slate-50 text-slate-900">{children}</div>;
+  return (
+    <div className="min-h-dvh bg-slate-50 pb-[env(safe-area-inset-bottom)] text-slate-900">
+      {children}
+    </div>
+  );
 }

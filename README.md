@@ -6,7 +6,7 @@ sentence, earn XP, and unlock achievement badges. Built as a Circles mini-app
 
 ## Status
 
-Days 1–4 of the plan are implemented.
+Days 1–5 of the plan are implemented.
 
 **Learning loop (Days 1–2)**
 - 5 lessons × 6 exercises (30 prebuilt, static JSON-style data)
@@ -31,8 +31,15 @@ Days 1–4 of the plan are implemented.
   mint and Circles CRC transfer via the SDK's `sendTransactions`
   (see `features/rewards/badgeMint.ts` and `crcReward.ts`)
 
-Not yet wired (later milestones): polish, real on-chain contract + CRC path,
-deploy & submit (Days 5–6).
+**Polish (Day 5)**
+- Mobile-first layout with safe-area padding and no iOS tap-highlight/zoom
+- Friendly animations: per-question fade, correct-answer pop + floating "+10 XP",
+  wrong-answer shake, animated XP counter, and a confetti burst on completion
+- `ErrorBoundary` so a render crash shows a friendly reload screen, not a blank one
+- Respects `prefers-reduced-motion`
+
+Not yet wired (later milestones): real on-chain contract + CRC path,
+deploy & submit (Day 6).
 
 ## Run
 
@@ -51,7 +58,8 @@ Vite + React + TypeScript, Tailwind CSS v4, Zustand for progress state.
 ```
 src/
   app/App.tsx                       view router (home → exercise → complete)
-  components/                       AnswerChoice, BadgeCard, LessonCard, ProgressBar
+  components/                       AnswerChoice, BadgeCard, LessonCard, ProgressBar,
+                                    WalletConnectButton, Confetti, ErrorBoundary
   data/                             exercises, lessons, badges (static)
   features/learning/                ExerciseScreen, LessonCompleteScreen, useLessonProgress
   features/circles/                 wallet store (miniapp-sdk: connect + onWalletChange)
