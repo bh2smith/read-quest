@@ -35,6 +35,7 @@ type ClassroomStore = {
     learnerName?: string,
   ) => Promise<void>;
   trustMember: (classId: string, memberAddress: string, ownerAddress: string) => Promise<void>;
+  refreshMembers: (classId: string, ownerAddress: string) => Promise<void>;
   removeClass: (classId: string) => void;
 };
 
@@ -225,6 +226,38 @@ export const useClassroom = create<ClassroomStore>((set, get) => ({
       set({ busy: false });
     } catch (e) {
       set({ busy: false, error: e instanceof Error ? e.message : "Could not trust member" });
+    }
+  },
+
+  refreshMembers: async (classId, ownerAddress) => {
+    if (!isLiveCircles(ownerAddress)) return; // demo roster is already local
+    set({ busy: true, error: null });
+    try {
+      const sdk = getCirclesSdk(ownerAddress as Address);
+      const page = await sdk.groups.getMembers(classId as Address);
+      const onchain = page.results.map((r) => r.member as string);
+
+      set((s) => {
+        const classes = s.classes.map((c) => {
+          if (c.id !== classId) return c;
+          const known = new Set(c.members.map((m) => m.address.toLowerCase()));
+          const added = onchain
+            .filter((addr) => !known.has(addr.toLowerCase()))
+            .map((addr) => ({ address: addr, joinedAt: Date.now(), trusted: true }));
+          // On-chain group members are, by definition, trusted into the group.
+          const members = [...c.members, ...added].map((m) =>
+            onchain.some((a) => a.toLowerCase() === m.address.toLowerCase())
+              ? { ...m, trusted: true }
+              : m,
+          );
+          return { ...c, members };
+        });
+        persist(classes);
+        return { classes };
+      });
+      set({ busy: false });
+    } catch (e) {
+      set({ busy: false, error: e instanceof Error ? e.message : "Could not load members" });
     }
   },
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { lessons, lessonsById } from "../data/lessons";
 import { badges, badgesById } from "../data/badges";
 import { LessonCard } from "../components/LessonCard";
@@ -6,10 +6,26 @@ import { BadgeCard } from "../components/BadgeCard";
 import { ExerciseScreen } from "../features/learning/ExerciseScreen";
 import { LessonCompleteScreen } from "../features/learning/LessonCompleteScreen";
 import { useProgress } from "../features/learning/useLessonProgress";
-import { ParentScreen } from "../features/parent/ParentScreen";
-import { JoinClassScreen } from "../features/classroom/JoinClassScreen";
 import { parseClassInvite } from "../features/classroom/classInvite";
 import { track } from "../lib/analytics";
+
+// Lazy-loaded so the Circles SDK + viem stay out of the learner's first load.
+const ParentScreen = lazy(() =>
+  import("../features/parent/ParentScreen").then((m) => ({ default: m.ParentScreen })),
+);
+const JoinClassScreen = lazy(() =>
+  import("../features/classroom/JoinClassScreen").then((m) => ({
+    default: m.JoinClassScreen,
+  })),
+);
+
+function ScreenFallback() {
+  return (
+    <div className="flex min-h-dvh items-center justify-center text-slate-400">
+      Loading…
+    </div>
+  );
+}
 
 type View =
   | { name: "home" }
@@ -41,14 +57,16 @@ export default function App() {
   if (view.name === "join" && initialInvite) {
     return (
       <Shell>
-        <JoinClassScreen
-          invite={initialInvite}
-          onDone={() => {
-            // Clear the invite params so a refresh doesn't re-prompt.
-            window.history.replaceState(null, "", window.location.pathname);
-            setView({ name: "home" });
-          }}
-        />
+        <Suspense fallback={<ScreenFallback />}>
+          <JoinClassScreen
+            invite={initialInvite}
+            onDone={() => {
+              // Clear the invite params so a refresh doesn't re-prompt.
+              window.history.replaceState(null, "", window.location.pathname);
+              setView({ name: "home" });
+            }}
+          />
+        </Suspense>
       </Shell>
     );
   }
@@ -56,7 +74,9 @@ export default function App() {
   if (view.name === "parent") {
     return (
       <Shell>
-        <ParentScreen onBack={() => setView({ name: "home" })} />
+        <Suspense fallback={<ScreenFallback />}>
+          <ParentScreen onBack={() => setView({ name: "home" })} />
+        </Suspense>
       </Shell>
     );
   }

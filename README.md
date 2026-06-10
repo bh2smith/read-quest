@@ -15,7 +15,8 @@ on-chain achievement badges. Built as a Circles mini-app, with a Circles
 
 ## Status
 
-Days 1–5 of the plan are implemented.
+The original 6-day plan (learning loop → polish) plus the **Circles
+study-circle** rework (Phases A–D) are implemented.
 
 **Learning loop (Days 1–2)**
 - 5 lessons × 6 exercises (30 prebuilt, static JSON-style data)
@@ -47,8 +48,30 @@ Days 1–5 of the plan are implemented.
 - `ErrorBoundary` so a render crash shows a friendly reload screen, not a blank one
 - Respects `prefers-reduced-motion`
 
-Not yet wired (later milestones): real on-chain contract + CRC path,
-deploy & submit (Day 6).
+**Circles study circle (Phases A–D)**
+- **A — group:** an instructor creates a class as a real Circles **group** via
+  `sdk.register.asGroup` (`@aboutcircles/sdk`), or a simulated group in demo mode.
+- **B — onboarding + trust:** per-class invite links (`?class=…`); a learner
+  opens it in the Circles host, connects their **own** passkey account, and
+  trusts the group so membership is on-chain. The app never stores learner keys.
+  The instructor trusts members into the group (`avatar.trust.add`).
+- **C — on-chain badges:** soulbound ERC-1155 (`contracts/Badge1155.sol`) — one
+  token id per lesson. Completing a lesson mints to the learner's own wallet via
+  the host's `sendTransactions` when `VITE_BADGE_1155_ADDRESS` is set; mock
+  otherwise. Deploy tooling in `contracts/`.
+- **D — cohort dashboard:** roster with per-member trust status, invite sharing,
+  and a live "Refresh from chain" read via `sdk.groups.getMembers`.
+
+The Circles SDK + viem are **code-split** into a lazy chunk, so a learner's
+first load stays light (~55 kB gzip); the SDK (~171 kB gzip) loads only when
+entering instructor/join screens.
+
+> **Verification status:** demo mode is fully runnable and verified locally
+> (typecheck + build + dev). The **live on-chain paths** (group registration,
+> trust, badge mint) are correctly typed against the real SDK/contract but have
+> **not been executed against Gnosis mainnet** from here — they need a funded
+> wallet, the Circles host, and a deployed `Badge1155`. Treat them as
+> implemented-but-unverified until run in-host.
 
 ## Run
 
@@ -60,7 +83,8 @@ bun run build    # type-check + production build to dist/
 
 ## Stack
 
-Vite + React + TypeScript, Tailwind CSS v4, Zustand for progress state.
+Vite + React + TypeScript, Tailwind CSS v4, Zustand for state,
+`@aboutcircles/miniapp-sdk` + `@aboutcircles/sdk` + viem for Circles/Gnosis.
 
 ## Layout
 
@@ -71,10 +95,12 @@ src/
                                     WalletConnectButton, Confetti, ErrorBoundary
   data/                             exercises, lessons, badges (static)
   features/learning/                ExerciseScreen, LessonCompleteScreen, useLessonProgress
-  features/circles/                 wallet store (miniapp-sdk: connect + onWalletChange)
+  features/circles/                 wallet store (miniapp-sdk) + circlesClient (full SDK)
+  features/classroom/               study-circle groups, invites, join, trust, roster
   features/referrals/               invite link build/copy + referral attribution
-  features/rewards/                 badge mint + CRC claim (mock), limits, RewardClaim UI
-  features/parent/                  ParentScreen (grown-up mode: wallet, progress, invites)
+  features/rewards/                 badge mint (mock + on-chain ERC-1155), CRC claim, limits
+  features/parent/                  ParentScreen (instructor mode: wallet, circle, rewards)
   lib/                              types, storage (localStorage), analytics
+contracts/                          Badge1155.sol (soulbound ERC-1155) + deploy script
   styles/globals.css                Tailwind entry + animations
 ```

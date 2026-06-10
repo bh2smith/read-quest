@@ -76,7 +76,7 @@ function ClassCard({
   classroom: Classroom;
   ownerAddress: string;
 }) {
-  const { addMember, trustMember, busy } = useClassroom();
+  const { addMember, trustMember, refreshMembers, busy } = useClassroom();
   const [copied, setCopied] = useState(false);
 
   async function copyInvite() {
@@ -114,7 +114,16 @@ function ClassCard({
         >
           {copied ? "Invite copied!" : "Copy invite link"}
         </button>
-        {!c.live && (
+        {c.live ? (
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => refreshMembers(c.id, ownerAddress)}
+            className="rounded-xl bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-500 transition hover:bg-slate-200 disabled:opacity-60"
+          >
+            {busy ? "Loading…" : "Refresh from chain"}
+          </button>
+        ) : (
           <button
             type="button"
             onClick={() =>
