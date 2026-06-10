@@ -29,6 +29,12 @@ type ClassroomStore = {
   createClass: (name: string, ownerAddress: string) => Promise<Classroom | null>;
   addMember: (classId: string, address: string, name?: string) => void;
   setMemberTrusted: (classId: string, address: string, trusted: boolean) => void;
+  joinClass: (
+    invite: { classId: string; inviter: string; name: string },
+    learnerAddress: string,
+    learnerName?: string,
+  ) => Promise<void>;
+  trustMember: (classId: string, memberAddress: string, ownerAddress: string) => Promise<void>;
   removeClass: (classId: string) => void;
 };
 
@@ -158,6 +164,68 @@ export const useClassroom = create<ClassroomStore>((set, get) => ({
       persist(classes);
       return { classes };
     });
+  },
+
+  joinClass: async (invite, learnerAddress, learnerName) => {
+    const { classId, inviter, name } = invite;
+    set({ busy: true, error: null });
+    try {
+      // Record the class on the learner's own device if it's not there yet.
+      set((s) => {
+        if (s.classes.some((c) => c.id === classId)) return s;
+        const joined: Classroom = {
+          id: classId,
+          name,
+          symbol: "",
+          ownerAddress: inviter,
+          createdAt: Date.now(),
+          live: isLiveCircles(learnerAddress),
+          members: [],
+        };
+        const classes = [...s.classes, joined];
+        persist(classes);
+        return { classes };
+      });
+
+      // Live: the learner trusts the group, making membership visible on-chain
+      // (the instructor reads it back via sdk.groups.getMembers).
+      if (isLiveCircles(learnerAddress)) {
+        const sdk = getCirclesSdk(learnerAddress as Address);
+        const me = await sdk.getAvatar(learnerAddress as Address);
+        await me.trust.add(classId as Address);
+      }
+
+      get().addMember(classId, learnerAddress, learnerName);
+      track("member_joined", {
+        classId,
+        member: learnerAddress,
+        live: isLiveCircles(learnerAddress),
+      });
+      set({ busy: false });
+    } catch (e) {
+      set({ busy: false, error: e instanceof Error ? e.message : "Could not join class" });
+    }
+  },
+
+  trustMember: async (classId, memberAddress, ownerAddress) => {
+    set({ busy: true, error: null });
+    try {
+      // Live: the group trusts the member (accepts their tokens as collateral).
+      if (isLiveCircles(ownerAddress)) {
+        const sdk = getCirclesSdk(ownerAddress as Address);
+        const group = await sdk.getAvatar(classId as Address);
+        await group.trust.add(memberAddress as Address);
+      }
+      get().setMemberTrusted(classId, memberAddress, true);
+      track("member_trusted", {
+        classId,
+        member: memberAddress,
+        live: isLiveCircles(ownerAddress),
+      });
+      set({ busy: false });
+    } catch (e) {
+      set({ busy: false, error: e instanceof Error ? e.message : "Could not trust member" });
+    }
   },
 
   removeClass: (classId) => {

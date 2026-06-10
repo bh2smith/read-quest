@@ -7,11 +7,14 @@ import { ExerciseScreen } from "../features/learning/ExerciseScreen";
 import { LessonCompleteScreen } from "../features/learning/LessonCompleteScreen";
 import { useProgress } from "../features/learning/useLessonProgress";
 import { ParentScreen } from "../features/parent/ParentScreen";
+import { JoinClassScreen } from "../features/classroom/JoinClassScreen";
+import { parseClassInvite } from "../features/classroom/classInvite";
 import { track } from "../lib/analytics";
 
 type View =
   | { name: "home" }
   | { name: "parent" }
+  | { name: "join" }
   | { name: "exercise"; lessonId: string }
   | {
       name: "complete";
@@ -20,8 +23,13 @@ type View =
       total: number;
     };
 
+// Parsed once: a ?class= invite link lands the learner on the join screen.
+const initialInvite = parseClassInvite();
+
 export default function App() {
-  const [view, setView] = useState<View>({ name: "home" });
+  const [view, setView] = useState<View>(
+    initialInvite ? { name: "join" } : { name: "home" },
+  );
   const progress = useProgress((s) => s.progress);
   const completeLesson = useProgress((s) => s.completeLesson);
   const reset = useProgress((s) => s.reset);
@@ -29,6 +37,21 @@ export default function App() {
   useEffect(() => {
     track("app_opened");
   }, []);
+
+  if (view.name === "join" && initialInvite) {
+    return (
+      <Shell>
+        <JoinClassScreen
+          invite={initialInvite}
+          onDone={() => {
+            // Clear the invite params so a refresh doesn't re-prompt.
+            window.history.replaceState(null, "", window.location.pathname);
+            setView({ name: "home" });
+          }}
+        />
+      </Shell>
+    );
+  }
 
   if (view.name === "parent") {
     return (
