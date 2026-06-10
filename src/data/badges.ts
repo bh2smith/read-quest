@@ -7,6 +7,7 @@ export const badges: Badge[] = [
     description: "Completed the Everyday English lesson.",
     emoji: "🗣️",
     lessonId: "lesson-1",
+    tokenId: 1,
   },
   {
     id: "badge-2",
@@ -14,6 +15,7 @@ export const badges: Badge[] = [
     description: "Completed the Dining Out lesson.",
     emoji: "🍽️",
     lessonId: "lesson-2",
+    tokenId: 2,
   },
   {
     id: "badge-3",
@@ -21,6 +23,7 @@ export const badges: Badge[] = [
     description: "Completed the On the Move lesson.",
     emoji: "🧭",
     lessonId: "lesson-3",
+    tokenId: 3,
   },
   {
     id: "badge-4",
@@ -28,6 +31,7 @@ export const badges: Badge[] = [
     description: "Completed the Working Life lesson.",
     emoji: "💼",
     lessonId: "lesson-4",
+    tokenId: 4,
   },
   {
     id: "badge-5",
@@ -35,6 +39,7 @@ export const badges: Badge[] = [
     description: "Completed the Phrasal Verbs lesson.",
     emoji: "🎓",
     lessonId: "lesson-5",
+    tokenId: 5,
   },
 ];
 
