@@ -78,6 +78,17 @@ function ClassCard({
 }) {
   const { addMember, trustMember, refreshMembers, busy } = useClassroom();
   const [copied, setCopied] = useState(false);
+  const [trustAddr, setTrustAddr] = useState("");
+
+  const validAddr = /^0x[0-9a-fA-F]{40}$/.test(trustAddr.trim());
+
+  async function trustByAddress() {
+    const addr = trustAddr.trim();
+    if (!validAddr) return;
+    addMember(c.id, addr); // show it in the roster
+    await trustMember(c.id, addr, ownerAddress); // group.trust.add on-chain (live)
+    setTrustAddr("");
+  }
 
   async function copyInvite() {
     try {
@@ -135,6 +146,26 @@ function ClassCard({
           </button>
         )}
       </div>
+
+      {c.live && (
+        <div className="mt-2 flex gap-2">
+          <input
+            value={trustAddr}
+            onChange={(e) => setTrustAddr(e.target.value)}
+            placeholder="Trust an address (0x…)"
+            spellCheck={false}
+            className="min-w-0 flex-1 rounded-xl border-2 border-slate-200 px-3 py-2 font-mono text-xs focus:border-indigo-400 focus:outline-none"
+          />
+          <button
+            type="button"
+            disabled={busy || !validAddr}
+            onClick={trustByAddress}
+            className="shrink-0 rounded-xl bg-emerald-600 px-3 py-2 text-xs font-bold text-white transition hover:bg-emerald-700 disabled:opacity-60"
+          >
+            {busy ? "…" : "Trust"}
+          </button>
+        </div>
+      )}
 
       {c.members.length > 0 && (
         <ul className="mt-3 flex flex-col gap-2">
