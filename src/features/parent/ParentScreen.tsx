@@ -7,6 +7,7 @@ import { useProgress } from "../learning/useLessonProgress";
 import { useWallet } from "../circles/wallet";
 import { buildInviteLink, copyInviteLink } from "../referrals/referral";
 import { RewardClaim } from "../rewards/RewardClaim";
+import { StudyCircle } from "../classroom/StudyCircle";
 
 type Props = {
   onBack: () => void;
@@ -70,6 +71,11 @@ export function ParentScreen({ onBack }: Props) {
             label="Badges"
           />
         </div>
+      </section>
+
+      <section className="rounded-3xl bg-white p-5 shadow-sm">
+        <h2 className="mb-3 text-lg font-bold text-slate-700">Study circle</h2>
+        <StudyCircle />
       </section>
 
       <section className="rounded-3xl bg-white p-5 shadow-sm">

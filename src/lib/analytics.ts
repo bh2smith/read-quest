@@ -8,7 +8,10 @@ export type AnalyticsEvent =
   | "badge_minted"
   | "crc_reward_claimed"
   | "referral_link_copied"
-  | "referred_wallet_connected";
+  | "referred_wallet_connected"
+  | "class_created"
+  | "member_joined"
+  | "member_trusted";
 
 // MVP: log only. Swap for a real sink (Supabase, etc.) later.
 export function track(event: AnalyticsEvent, props?: Record<string, unknown>) {
