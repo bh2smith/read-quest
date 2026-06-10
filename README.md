@@ -1,8 +1,17 @@
 # ReadQuest
 
-A free, kid-friendly reading game: children fill in the missing word for a pictured
-sentence, earn XP, and unlock achievement badges. Built as a Circles mini-app
-(see [plan.md](./plan.md) for the full product plan and roadmap).
+A free vocabulary / language-learning (ESL) game for learners 16+ and study
+circles: fill in the missing word for a pictured sentence, earn XP, and unlock
+on-chain achievement badges. Built as a Circles mini-app, with a Circles
+"study circle" (group) where classmates trust each other.
+(See [plan.md](./plan.md) for the full product plan and roadmap.)
+
+> **Direction note:** ReadQuest began as an early-reading game for children and
+> has pivoted to **16+ ESL / language learning**. Raising the age floor clears
+> COPPA/GDPR-K and lets learners self-custody their own Circles accounts, which
+> makes the study-circle (group + trust graph) model honest rather than a
+> workaround. Content and copy now target older learners; the on-chain
+> classroom layer (groups, self-onboarding, ERC-1155 badges) is the next phase.
 
 ## Status
 

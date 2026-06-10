@@ -42,8 +42,8 @@ export function ParentScreen({ onBack }: Props) {
           ←
         </button>
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-800">For grown-ups</h1>
-          <p className="text-sm text-slate-500">Parent, teacher & sponsor tools</p>
+          <h1 className="text-2xl font-extrabold text-slate-800">Instructor mode</h1>
+          <p className="text-sm text-slate-500">Teacher, sponsor & study-circle tools</p>
         </div>
       </header>
 
@@ -51,8 +51,9 @@ export function ParentScreen({ onBack }: Props) {
         <h2 className="mb-3 text-lg font-bold text-slate-700">Circles account</h2>
         <WalletConnectButton />
         <p className="mt-3 text-xs text-slate-400">
-          Connect a parent, teacher, or sponsor wallet. Children never need a
-          wallet — rewards always go to a grown-up account.
+          Connect a teacher or sponsor wallet to mint badges and reward your
+          learners. Study-circle groups for self-onboarding learners are coming
+          next.
         </p>
       </section>
 

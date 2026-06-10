@@ -76,7 +76,7 @@ export default function App() {
         <header className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-extrabold text-indigo-700">ReadQuest</h1>
-            <p className="text-sm text-slate-500">Read, play, earn badges.</p>
+            <p className="text-sm text-slate-500">Learn words, earn badges.</p>
           </div>
           <div className="rounded-2xl bg-amber-100 px-4 py-2 text-center">
             <p key={progress.xp} className="animate-pop-in text-xl font-extrabold text-amber-600">
@@ -121,7 +121,7 @@ export default function App() {
             onClick={() => setView({ name: "parent" })}
             className="text-sm font-semibold text-indigo-500 hover:text-indigo-700"
           >
-            For grown-ups →
+            Instructor mode →
           </button>
           <span className="text-slate-300">·</span>
           <button

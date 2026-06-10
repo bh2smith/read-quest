@@ -94,7 +94,7 @@ export function RewardClaim() {
       {error && <p className="text-xs text-rose-500">{error}</p>}
       <p className="text-xs text-slate-400">
         One badge and one CRC reward per lesson, per wallet. Mock transfers in
-        this build — rewards always go to the connected grown-up wallet.
+        this build — rewards go to the connected wallet.
       </p>
     </div>
   );

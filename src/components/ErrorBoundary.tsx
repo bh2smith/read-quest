@@ -3,7 +3,7 @@ import { Component, type ReactNode } from "react";
 type Props = { children: ReactNode };
 type State = { error: Error | null };
 
-// Keeps a render crash from showing a child a blank white screen.
+// Keeps a render crash from showing a blank white screen.
 export class ErrorBoundary extends Component<Props, State> {
   state: State = { error: null };
 

@@ -4,7 +4,7 @@ import { delay, mockTxHash } from "./mock";
 export type MintResult = { txHash: string; mode: "mock" | "onchain" };
 
 /**
- * Mint an achievement badge to the parent/teacher wallet.
+ * Mint an achievement badge to the learner's (or instructor's) wallet.
  *
  * MVP: simulated so the full flow is demoable without a deployed contract.
  *
